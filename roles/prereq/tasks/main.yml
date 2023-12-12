@@ -94,30 +94,6 @@
         - 10.42.0.0/16  # Pods
         - 10.43.0.0/16  # Services
 
-- name: Add br_netfilter to /etc/modules-load.d/
-  ansible.builtin.copy:
-    content: "br_netfilter"
-    dest: /etc/modules-load.d/br_netfilter.conf
-    mode: "u=rw,g=,o="
-  when: (ansible_os_family == 'RedHat' or ansible_distribution == 'Archlinux')
-
-- name: Load br_netfilter
-  community.general.modprobe:
-    name: br_netfilter
-    state: present
-  when: (ansible_os_family == 'RedHat' or ansible_distribution == 'Archlinux')
-
-- name: Set bridge-nf-call-iptables (just to be sure)
-  ansible.posix.sysctl:
-    name: "{{ item }}"
-    value: "1"
-    state: present
-    reload: true
-  when: (ansible_os_family == 'RedHat' or ansible_distribution == 'Archlinux')
-  loop:
-    - net.bridge.bridge-nf-call-iptables
-    - net.bridge.bridge-nf-call-ip6tables
-
 - name: Check for Apparmor existence
   ansible.builtin.stat:
     path: /sys/module/apparmor/parameters/enabled
@@ -128,15 +104,6 @@
   ansible.builtin.command: cat /sys/module/apparmor/parameters/enabled
   register: apparmor_status
   changed_when: false
-
-- name: Install Apparmor Parser [Suse]
-  when:
-    - ansible_os_family == 'Suse'
-    - apparmor_status is defined
-    - apparmor_status.stdout == "Y"
-  ansible.builtin.package:
-    name: apparmor-parser
-    state: present
 
 - name: Install Apparmor Parser [Debian]
   when:
@@ -163,16 +130,6 @@
       - "Warning: Iptables {{ ansible_facts.packages['iptables'][0]['version'] }} found."
       - "Add '--prefer-bundled-bin' to extra_server_args variable to use the bundled iptables binary."
   ignore_errors: true
-
-- name: Add /usr/local/bin to sudo secure_path
-  ansible.builtin.lineinfile:
-    line: 'Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin'
-    regexp: "Defaults(\\s)*secure_path(\\s)*="
-    state: present
-    insertafter: EOF
-    path: /etc/sudoers
-    validate: 'visudo -cf %s'
-  when: ansible_os_family == 'RedHat'
 
 - name: Setup alternative K3s directory
   when:
