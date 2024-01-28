@@ -1,0 +1,43 @@
+---
+# add secrets
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-server
+  labels:
+    app: db-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-server
+  template:
+    metadata:
+      labels:
+        app: db-server
+    spec:
+      containers:
+      - name: db-server-container
+        image: mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: fake-root-password
+        - name: MYSQL_ROOT_HOST
+          value: '%'
+        - name: MYSQL_DATABASE
+          value: fake-database-name
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+spec:
+  selector:
+    app: db-server
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

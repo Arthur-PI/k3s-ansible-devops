@@ -1,0 +1,29 @@
+---
+- name: Install kubernetes python package
+  community.general.pipx:
+    name: kubernetes
+    install_deps: true
+
+- name: Deploy namespace
+  k8s:
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ app_namespace }}"
+
+- name: Deploy Web App
+  k8s:
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+    definition: "{{ lookup('file', 'web_app.yml') }}"
+    namespace: "{{ app_namespace }}"
+
+- name: Deploy Database Server
+  k8s:
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+    definition: "{{ lookup('file', 'db_server.yml') }}"
+    namespace: "{{ app_namespace }}"

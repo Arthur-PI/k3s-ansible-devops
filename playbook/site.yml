@@ -17,3 +17,8 @@
   become: true
   roles:
     - role: k3s_agent
+
+- name: Deploy the app
+  hosts: server
+  roles:
+    - role: deploy_app

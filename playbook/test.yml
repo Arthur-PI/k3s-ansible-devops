@@ -1,0 +1,6 @@
+---
+- name: Deploy the app
+  hosts: server
+  # become: true
+  roles:
+    - role: deploy_app
