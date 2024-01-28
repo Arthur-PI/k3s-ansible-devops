@@ -1,3 +1,11 @@
+## What this is
+
+This project is an automated way to install and deploy a kubernetes environment using ansible  
+It also deploys a webapp with 3 replicas and an Ingress controller as well as a database  
+
+
+At least 2 VMs are needed, but you can add more if you want
+
 ## System requirements
 
 Execute this script to ensure system requirements
