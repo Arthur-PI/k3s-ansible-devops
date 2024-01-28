@@ -41,11 +41,3 @@ Start provisioning of the cluster using the following command:
 ```bash
 ansible-playbook playbook/site.yml -i inventory.yml -K
 ```
-
-## Upgrading
-
-A playbook is provided to upgrade K3s on all nodes in the cluster. To use it, update `k3s_version` with the desired version in `inventory.yml` and run:
-
-```bash
-ansible-playbook playbook/upgrade.yml -i inventory.yml
-```
