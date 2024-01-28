@@ -4,6 +4,7 @@ if ! command -v python3 &> /dev/null
 then
 	echo "python3 command not found, installing it..."
 	sudo apt install python3-full
+	sudo apt install python3-kubernetes
 	echo
 fi
 

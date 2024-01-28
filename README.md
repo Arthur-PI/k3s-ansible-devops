@@ -17,7 +17,7 @@ bash setup.sh
 ### VMs requirements
 
 All managed nodes in inventory must have:
-- Passwordless SSH access (`ssh-copy-id` to all the node beforehand)
+- Passwordless SSH access (`ssh-copy-id` to all the node beforehand) and don't forget access ssh from the master to the master
 - The user `ansible-admin` must exist on and have admin permissions under `sudo`
 - The password for the `ansible-admin` user must be the same across all the VMs
 
